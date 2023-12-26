@@ -21,7 +21,7 @@ export default function Login() {
     event.preventDefault();
     try {
       await loginRequest;
-      Navigate("/dashboard");
+      Navigate("/");
     } catch (error) {
       setEmailAddress('');
       setPassword('');
