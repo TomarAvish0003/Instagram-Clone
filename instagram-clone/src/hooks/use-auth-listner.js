@@ -7,33 +7,34 @@ export default function useAuthListener() {
     JSON.parse(localStorage.getItem("authUser"))
   );
   const { firebase } = useContext(FirebaseContext);
+
   if (firebase === undefined) {
     console.log('firebase is undefined');
   } else {
     console.log('firebase is defined', firebase);
   }
-  console.log('firebase instance:', firebase);
-  const auth = getAuth();
 
+  console.log('firebase instance:', firebase);
+  const auth = getAuth(firebase);
+  console.log('auth object:', auth);
   useEffect(() => {
     console.log('useEffect running');
-    try {
-      const listener = onAuthStateChanged(auth, (authUser) => {
-        if (authUser) {
-          console.log("User logged in:", authUser);
-          localStorage.setItem("authUser", JSON.stringify(authUser));
-          setUser(authUser);
-        } else {
-          console.log("User logged out");
-          localStorage.removeItem("authUser");
-          setUser(null);
-        }
-      });
-      return () => listener();
-    } catch (error) {
-      console.error("Error in auth state change listener:", error);
-    }
-  }, [firebase]);
+    const listener = onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        console.log("User logged in:", authUser);
+        localStorage.setItem("authUser", JSON.stringify(authUser));
+        setUser(authUser);
+      } else {
+        console.log("User logged out");
+        localStorage.removeItem("authUser");
+        setUser(null);
+      }
+    });
+
+    return () => {
+      listener();
+    };
+  }, [auth]);
 
   return { user };
 }

@@ -12,8 +12,8 @@ export default function Sidebar() {
     return null;
   }
 
-  const { user: { docId = '', fullName, username, userId, following } = {} } = loggedInUserContext;
-
+  const { activeUser: { docId = '', fullName, username, userId, following } = {} } = loggedInUserContext;
+  console.log('Sidebar props:', { userId, following, docId });
   return (
     <div className="p-4">
       <User username={username} fullName={fullName} />
